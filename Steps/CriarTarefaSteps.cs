@@ -62,22 +62,12 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void CriarTarefaCompletaUnicaComSucesso(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
-
-            // Seleciona a opção 'Criar Tarefa' no menu lateral
             SelecionarOpcaoCriarTarefa();
-
-            // Preenche todo o formulário com as informações da tarefa
             PreencherFormularioDaTarefa("2", "Geração de Teste", "Teste");
-
-            //  Insere a imagem de evidência
             CarregarImagem(CriarTarefaPage.CampoEnviarArquivo());
-
-            // Clica no botão para criar a nova tarefa
             ClicarNoElemento(CriarTarefaPage.BotaoCriarNovaTarefa());
 
-            // Pega a data e hora no momento da criação da tarefa e valida com a data e hora exibida nos detalhes da tarefa
             DateTime data = DateTime.Now;
             string dataAtual = data.ToString("yyyy-MM-dd HH:mm");
             PausaImplicita(20);
@@ -87,35 +77,21 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void CriarMaisDeUmaTarefaComSucesso(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
-
-            // Seleciona a opção 'Criar Tarefa' no menu lateral
             SelecionarOpcaoCriarTarefa();
-
-            // Preenche todo o formulário com as informações da tarefa
             PreencherFormularioDaTarefa("2", "Geração de Teste", "Teste");
 
-            //  Insere a imagem de evidência
             CarregarImagem(CriarTarefaPage.CampoEnviarArquivo());
 
-            // Clica para marcar o ckeckbox 'Continuar relatando'
             ClicarNoElemento(CriarTarefaPage.CampoContinuarReport());
-
-            // Clica no botão para criar a nova tarefa
             ClicarNoElemento(CriarTarefaPage.BotaoCriarNovaTarefa());
 
-            // Preenche todo o formulário com as informações da tarefa
             PausaImplicita(15);
             PreencherFormularioDaTarefa("2", "Geração de Teste Dois", "Teste Dois");
 
-            // Clica para desmarcar o ckeckbox 'Continuar relatando'
             ClicarNoElemento(CriarTarefaPage.CampoContinuarReport());
-
-            // Clica no botão para criar a nova tarefa
             ClicarNoElemento(CriarTarefaPage.BotaoCriarNovaTarefa());
 
-            // Pega a data e hora no momento da criação da tarefa e valida com a data e hora exibida nos detalhes da tarefa
             DateTime data = DateTime.Now;
             string dataAtual = data.ToString("yyyy-MM-dd HH:mm");
             PausaImplicita(20);
@@ -125,19 +101,10 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void EnviarCampoCategoriaVazio(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
-
-            // Seleciona a opção 'Criar Tarefa' no menu lateral
             SelecionarOpcaoCriarTarefa();
-
-            // Preenche o formulário com as informações da tarefa, passando o valor '0' no campo 'Categoria'
             PreencherFormularioDaTarefa("0", "Geração de Teste", "Teste");
-
-            // Clica no botão para criar a nova tarefa
             ClicarNoElemento(CriarTarefaPage.BotaoCriarNovaTarefa());
-
-            // Valida exibição da mensagem de erro na aplicação
             Assert.IsTrue(ElementoVisivel(CriarTarefaPage.MensagemErroNaAplicacao()));
         }
 

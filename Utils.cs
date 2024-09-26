@@ -1,19 +1,25 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Automacao_AppMantisWeb
 {
     public class Utils
     {
+        #region Variáveis
+
         public static IWebDriver Driver;
 
         public static string usuario = "Luis_Menezes";
         public static string senha = "ue%LSW7a-5G)7;])";
+
+        #endregion Variáveis
+
+        #region Métodos
 
         public static bool ElementoVisivel(By elemento)
         {
@@ -39,9 +45,18 @@ namespace Automacao_AppMantisWeb
             Thread.Sleep(tempo);
         }
 
-        public static void ClicarNoElemento(By elemento)
+        public static void ClicarNoElemento(By elemento, [Optional] string descricao)
         {
-            Driver.FindElement(elemento).Click();
+            try
+            {
+                if(descricao != null) { Console.WriteLine(descricao); }
+                Driver.FindElement(elemento).Click();
+            }
+            catch
+            {
+                Console.WriteLine(Console.Error);
+                Assert.Fail();
+            }
         }
 
         public static void Digitar(By elemento, string texto)
@@ -65,10 +80,6 @@ namespace Automacao_AppMantisWeb
             element.SendKeys(caminho);
         }
 
-        public static void PressionarEnter()
-        {
-            Actions action = new Actions(Driver);
-            action.SendKeys(Keys.Enter);
-        }
+        #endregion Métodos
     }
 }

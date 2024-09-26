@@ -1,6 +1,7 @@
 ﻿using Automacao_AppMantisWeb.Page;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
+using System;
 
 namespace Automacao_AppMantisWeb.Steps
 {
@@ -14,22 +15,24 @@ namespace Automacao_AppMantisWeb.Steps
             ClicarNoElemento(MenuPage.MenuVerTarefas());
         }
 
+        public static void AdicionarAnotacao(string texto)
+        {
+            Digitar(VerTarefasPage.CampoAnotacao(), texto);
+            ClicarNoElemento(VerTarefasPage.BotaoAdicionarAnotacao());
+        }
+
         #endregion Métodos Genéricos
 
         public static void SelecionarEVisualizarTarefa(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Seleciona a opção 'Ver Tarefas' no menu lateral
             SelecionarOpcaoVerTarefas();
 
-            // Armazena na variável o número do ID da tarefa e clica nela para visualizar
             PausaImplicita(10);
             string idTarefa = Driver.FindElement(VerTarefasPage.IdTarefa()).Text;
             ClicarNoElemento(VerTarefasPage.IdTarefa());
 
-            // Valida o título da tela de detalhes da tarefa e o ID
             PausaImplicita(15);
             string idBug = Driver.FindElement(VerTarefasPage.IdBug()).Text;
             Assert.IsTrue(ElementoVisivel(VerTarefasPage.TituloVerDetalhesDaTarefa()));
@@ -38,15 +41,12 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void BuscarTarefaPeloId(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Pegar o número do ID de uma tarefa, inserir no campo do filtro e pesquisar
             string id = Driver.FindElement(MinhaVisaoPage.IdTarefaTelaPrincipal()).Text;
             Digitar(MinhaVisaoPage.FiltroBugsId(), id);
             Digitar(MinhaVisaoPage.FiltroBugsId(), Keys.Enter);
 
-            // Valida o título da tela de detalhes da tarefa e o ID
             PausaImplicita(15);
             string idBug = Driver.FindElement(VerTarefasPage.IdBug()).Text;
             Assert.IsTrue(ElementoVisivel(VerTarefasPage.TituloVerDetalhesDaTarefa()));
@@ -55,13 +55,10 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void FiltrarTarefasNaoAtribuidas(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Seleciona a opção 'Não Atribuídos' na tela principal
             ClicarNoElemento(MinhaVisaoPage.FiltroBugsNaoAtribuidos());
 
-            // Valida se o valor do campo 'Atribuído A' é igual a 'nenhum'
             PausaImplicita(10);
             string valorCampoAtribuidoA = Driver.FindElement(VerTarefasPage.FiltroAtribuidoA()).Text;
             Assert.AreEqual("nenhum", valorCampoAtribuidoA);
@@ -69,13 +66,10 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void FiltrarTarefasRelatadasPorMim(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Seleciona a opção 'Relatados por Mim' na tela principal
             ClicarNoElemento(MinhaVisaoPage.FiltroBugsRelatadosPorMim());
 
-            // Valida se o valor do campo 'Relator' é igual a 'Luis_Menezes'
             PausaImplicita(10);
             string valorCampoRelator = Driver.FindElement(VerTarefasPage.FiltroRelator()).Text;
             Assert.AreEqual("Luis_Menezes", valorCampoRelator);
@@ -83,18 +77,14 @@ namespace Automacao_AppMantisWeb.Steps
 
         public static void AtivarMonitoramentoDaTarefa(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Seleciona a opção 'Ver Tarefas' no menu lateral
             SelecionarOpcaoVerTarefas();
 
-            // Armazena na variável o número do ID da tarefa e clica nela para visualizar
             PausaImplicita(10);
             string idTarefa = Driver.FindElement(VerTarefasPage.IdTarefa()).Text;
             ClicarNoElemento(VerTarefasPage.IdTarefa());
 
-            // Clica no botão 'Monitorar'. Caso já esteja ativado, desativa pra poder clicar novamente
             try
             {
                 PausaImplicita(10);
@@ -107,32 +97,26 @@ namespace Automacao_AppMantisWeb.Steps
                 ClicarNoElemento(VerTarefasPage.BotaoMonitorar());
             }
 
-            // Clica na opção 'Minha Visão' do menu lateral
             PausaForcada(3);
             ClicarNoElemento(MenuPage.MenuMinhaVisao());
 
-            // Clica na opção 'Minha Visão' do menu lateral
             PausaImplicita(10);
             ClicarNoElemento(MinhaVisaoPage.FiltroBugsMonitoradosPorMim());
 
-            // Valida o filtro de tarefas monitoradas pelo ID e o nome do monitor
             PausaImplicita(15);
             string idTarefaMonitorada = Driver.FindElement(VerTarefasPage.IdTarefa()).Text;
-            string usuarioMonitor = Driver.FindElement(VerTarefasPage.OpcaoMonitoradoPor()).Text;            
+            string usuarioMonitor = Driver.FindElement(VerTarefasPage.OpcaoMonitoradoPor()).Text;
             Assert.AreEqual(idTarefa, idTarefaMonitorada);
             Assert.AreEqual("Luis_Menezes", usuarioMonitor);
         }
 
         public static void DesativarMonitoramentoDaTarefa(string usuario, string senha)
         {
-            // Efetua login com sucesso
             LoginSteps.RealizaLoginComSucesso(usuario, senha);
 
-            // Clica na opção 'Monitorados por Mim' 
             PausaImplicita(10);
             ClicarNoElemento(MinhaVisaoPage.FiltroBugsMonitoradosPorMim());
 
-            // Seleciona uma tarefa monitorada. Caso não tenha uma, realiza o fluxo de atiação do monitoramento da tarefa
             string idTarefa;
             try
             {
@@ -156,21 +140,52 @@ namespace Automacao_AppMantisWeb.Steps
                 ClicarNoElemento(VerTarefasPage.IdTarefa());
             }
 
-            // Clica na opção 'Parar de Monitorar' 
             PausaImplicita(10);
             ClicarNoElemento(VerTarefasPage.BotaoPararDeMonitorar());
 
-            // Clica na opção 'Minha Visão' do menu lateral e clica na opção 'Monitorados por Mim'
             PausaForcada(2); ;
             ClicarNoElemento(MenuPage.MenuMinhaVisao());
             PausaImplicita(10);
             ClicarNoElemento(MinhaVisaoPage.FiltroBugsMonitoradosPorMim());
 
-            // Valida o filtro de tarefas monitoradas pelo nome do monitor e a ausência da tarefa não mais monitorada
             PausaImplicita(15);
             string usuarioMonitor = Driver.FindElement(VerTarefasPage.OpcaoMonitoradoPor()).Text;
             Assert.IsFalse(ElementoVisivel(VerTarefasPage.IdEspecificoTarefa(idTarefa)));
             Assert.AreEqual("Luis_Menezes", usuarioMonitor);
+        }
+
+        public static void AdicionarAnotacaoNaTarefa(string usuario, string senha)
+        {
+            LoginSteps.RealizaLoginComSucesso(usuario, senha);
+
+            SelecionarOpcaoVerTarefas();
+
+            PausaImplicita(10);
+            ClicarNoElemento(VerTarefasPage.IdTarefa());
+
+            string anotacao = "Anotação Teste";
+            AdicionarAnotacao(anotacao);
+
+            PausaImplicita(15);
+            Assert.IsTrue(ElementoVisivel(VerTarefasPage.Anotacao(anotacao)));
+        }
+
+        public static void RegistrarAcaoNoHistoricoDaTarefa(string usuario, string senha)
+        {
+            LoginSteps.RealizaLoginComSucesso(usuario, senha);
+
+            SelecionarOpcaoVerTarefas();
+
+            PausaImplicita(10);
+            ClicarNoElemento(VerTarefasPage.IdTarefa());
+
+            string anotacao = "Anotação de registro no histórico";
+            AdicionarAnotacao(anotacao);
+
+            DateTime data = DateTime.Now;
+            string dataAtual = data.ToString("yyyy-MM-dd HH:mm");
+            PausaImplicita(15);
+            Assert.IsTrue(ElementoVisivel(VerTarefasPage.Anotacao(dataAtual)));
         }
     }
 }
