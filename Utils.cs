@@ -19,7 +19,7 @@ namespace Automacao_AppMantisWeb
 
         #endregion Variáveis
 
-        #region Métodos
+        #region Métodos de Interação/Pausa
 
         public static bool ElementoVisivel(By elemento)
         {
@@ -76,10 +76,10 @@ namespace Automacao_AppMantisWeb
 
             IJavaScriptExecutor executor = (IJavaScriptExecutor)Driver;
             executor.ExecuteScript("document.getElementsByName('max_file_size')[0].setAttribute('type', 'file');", element);
-            string caminho = Path.Combine(Directory.GetCurrentDirectory(), @"Files\Bug.jpg");
+            string caminho = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files\\Bug.jpg");
             element.SendKeys(caminho);
         }
 
-        #endregion Métodos
+        #endregion Métodos de Interação/Pausa
     }
 }
